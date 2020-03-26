@@ -1,0 +1,502 @@
+@prefix gn: <http://www.geonames.org/ontology#>.
+@prefix mao: <http://www.vortic3.com/MANTO#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix sch: <https://schema.org/>.
+@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#>.
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#>.
+@prefix fno: <http://w3id.org/function/ontology#>.
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#>.
+@prefix dbo: <http://dbpedia.org/resource/>.
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix rmlext: <http://www.vortic3.com/MANTO/ext#>.
+
+@base <http://www.vortic3.com/MANTO/> .
+
+<#stopsMapping>
+	rml:logicalSource [
+		rml:source "stops.txt" ;
+		rml:referenceFormulation ql:CSV
+	];
+	rr:subjectMap [
+		rr:template "http://www.vortic3.com/MANTO/{stop_id}";
+		rr:class mao:stopPlace
+	];
+	rr:predicateObjectMap [
+		rr:predicate sch:name;
+		rr:objectMap [
+			rml:reference "stop_name"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate wgs84_pos:lat;
+		rr:objectMap [
+			rml:reference "stop_lat"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate wgs84_pos:lon;
+		rr:objectMap [
+			rml:reference "stop_lon"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate gn:timeZone;
+		rr:objectMap [
+			rr:template "http://dbpedia.org/resource/{stop_timezone}";
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate gn:parentFeature;
+		rr:objectMap [
+			rr:template "http://www.vortic3.com/MANTO/{parent_station}";
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate mao:stopPlaceCode;
+		rr:objectMap [
+			rml:reference "stop_code"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate mao:address;
+		rr:objectMap [
+			rml:reference "stop_desc"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate mao:tariffZone;
+		rr:objectMap [
+			rml:reference "zone_id"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate mao:infoLink;
+		rr:objectMap [
+			rml:reference "stop_url"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate mao:locationType;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:changeValueEnum  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "location_type"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant ",0,1,2"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "quay,quay,stopPlace,entrance"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate mao:ofLine;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getFieldQueryBase  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "stop_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "stops.txt,stop_id,stop_times.txt,stop_id,stop_times.txt,trip_id,trips.txt,trip_id,trips.txt,route_id,routes.txt,route_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "route_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter4 ; 
+					rr:objectMap [  
+						rr:constant "http://www.vortic3.com/MANTO/"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate mao:transportFor;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getFieldQueryEnum  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "stop_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "stops.txt,stop_id,stop_times.txt,stop_id,stop_times.txt,trip_id,trips.txt,trip_id,trips.txt,route_id,routes.txt,route_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "route_type"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter4 ; 
+					rr:objectMap [  
+						rr:constant "0,1,2,3,4,5,6,7"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter5 ; 
+					rr:objectMap [  
+						rr:constant "lightRail,Metro,Rail,Bus,Ferry,cableTram,aerialLift,Funicular"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate mao:connectionLink;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getFieldQuery  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "stop_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "stops.txt,stop_id,stops.txt,parent_station,stops.txt,stop_id,stop_times.txt,stop_id,stop_times.txt,trip_id,trips.txt,trip_id,trips.txt,route_id,routes.txt,route_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "route_short_name"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate mao:transfer;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getFieldQueryEnum  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "stop_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "stops.txt,stop_id,stops.txt,parent_station,stops.txt,stop_id,stop_times.txt,stop_id,stop_times.txt,trip_id,trips.txt,trip_id,trips.txt,route_id,routes.txt,route_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "route_type"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter4 ; 
+					rr:objectMap [  
+						rr:constant "0,1,2,3,4,5,6,7"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter5 ; 
+					rr:objectMap [  
+						rr:constant "lightRail,Metro,Rail,Bus,Ferry,cableTram,aerialLift,Funicular"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate mao:wheelchairAccess;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getWheelchair  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "wheelchair_boarding"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rml:reference "location_type"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rml:reference "parent_station"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter4 ; 
+					rr:objectMap [  
+						rr:constant "stops.txt"
+					] 
+				] ;
+			] 
+		] 
+	] . 
+
+<#routesMapping>
+	rml:logicalSource [
+		rml:source "routes.txt" ;
+		rml:referenceFormulation ql:CSV
+	];
+	rr:subjectMap [
+		rr:template "http://www.vortic3.com/MANTO/{route_id}";
+		rr:class mao:line
+	];
+	rr:predicateObjectMap [
+		rr:predicate sch:name;
+		rr:objectMap [
+			rml:reference "route_short_name"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate sch:description;
+		rr:objectMap [
+			rml:reference "route_long_name"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate mao:authority;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getFieldQuery  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "agency_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "routes.txt,agency_id,agency.txt,agency_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "agency_name"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate gn:timeZone;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getFieldQueryBase  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "agency_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "routes.txt,agency_id,agency.txt,agency_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "agency_timezone"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter4 ; 
+					rr:objectMap [  
+						rr:constant "http://dbpedia.org/resource/"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate mao:infoLink;
+		rr:objectMap [
+			rml:reference "route_url"
+		]
+	];
+	rr:predicateObjectMap [
+		rr:predicate mao:transportFor;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:changeValueEnum  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "route_type"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "0,1,2,3,4,5,6,7"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "lightRail,Metro,Rail,Bus,Ferry,cableTram,aerialLift,Funicular"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate mao:infoLinkAgency;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getFieldQuery  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "agency_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "routes.txt,agency_id,agency.txt,agency_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "agency_url"
+					] 
+				] ;
+			] 
+		] 
+	] ; 
+	rr:predicateObjectMap [
+		rr:predicate mao:sequence;
+		rr:objectMap [
+			fnml:functionValue [
+				rr:predicateObjectMap [
+					rr:predicate fno:executes ; 
+					rr:objectMap [  
+						rr:constant grel:getSequenceline  
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter ; 
+					rr:objectMap [  
+						rml:reference "route_id"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter2 ; 
+					rr:objectMap [  
+						rr:constant "routes.txt"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter3 ; 
+					rr:objectMap [  
+						rr:constant "trips.txt"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter4 ; 
+					rr:objectMap [  
+						rr:constant "stop_times.txt"
+					] 
+				] ;
+				rr:predicateObjectMap [
+					rr:predicate grel:valueParameter5 ; 
+					rr:objectMap [  
+						rr:constant "http://www.vortic3.com/MANTO/"
+					] 
+				] ;
+			] 
+		] 
+	] . 
